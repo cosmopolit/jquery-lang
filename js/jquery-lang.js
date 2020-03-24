@@ -77,31 +77,31 @@
         // Store existing mutation methods so we can auto-run
         // translations when new data is added to the page
         this._mutationCopies = {
-            append: $.fn.append,
-            appendTo: $.fn.appendTo,
-            prepend: $.fn.prepend,
-            before: $.fn.before,
-            after: $.fn.after,
-            html: $.fn.html
+            append: jQuery.fn.append,
+            appendTo: jQuery.fn.appendTo,
+            prepend: jQuery.fn.prepend,
+            before: jQuery.fn.before,
+            after: jQuery.fn.after,
+            html: jQuery.fn.html
         };
 
         // Now override the existing mutation methods with our own
-        $.fn.append = function () {
+        jQuery.fn.append = function () {
             return self._mutation(this, 'append', arguments)
         };
-        $.fn.appendTo = function () {
+        jQuery.fn.appendTo = function () {
             return self._mutation(this, 'appendTo', arguments)
         };
-        $.fn.prepend = function () {
+        jQuery.fn.prepend = function () {
             return self._mutation(this, 'prepend', arguments)
         };
-        $.fn.before = function () {
+        jQuery.fn.before = function () {
             return self._mutation(this, 'before', arguments)
         };
-        $.fn.after = function () {
+        jQuery.fn.after = function () {
             return self._mutation(this, 'after', arguments)
         };
-        $.fn.html = function () {
+        jQuery.fn.html = function () {
             return self._mutation(this, 'html', arguments)
         };
 
@@ -121,7 +121,7 @@
             }
         }
 
-        $(function () {
+        jQuery(function () {
             // Setup data on the language items
             self._start();
 
@@ -171,7 +171,7 @@
         var self = this;
 
         if (lang && self._dynamic[lang]) {
-            $.ajax({
+            jQuery.ajax({
                 dataType: "json",
                 url: self._dynamic[lang],
                 success: function (data) {
@@ -222,12 +222,12 @@
      */
     Lang.prototype._start = function (selector) {
         // Get the page HTML
-        var arr = selector !== undefined ? $(selector).find('[lang]') : $(':not(html)[lang]'),
+        var arr = selector !== undefined ? jQuery(selector).find('[lang]') : jQuery(':not(html)[lang]'),
             arrCount = arr.length,
             elem;
 
         while (arrCount--) {
-            elem = $(arr[arrCount]);
+            elem = jQuery(arr[arrCount]);
             this._processElement(elem);
         }
     };
@@ -309,7 +309,7 @@
         var nodes = elem.contents(), nodeObjArray = [], nodeObj = {},
             nodeArr, that = this, map = Array.prototype.map;
 
-        $.each(nodes, function (index, node) {
+        jQuery.each(nodes, function (index, node) {
             if (node.nodeType !== 3) {
                 return;
             }
@@ -324,10 +324,10 @@
 
 		// If element has only one text node and data-lang-token is defined
 		// set langContentKey property to use as a token
-		if(nodeObjArray.length === 1){
+		if(nodes.length == 1){
 			nodeObjArray[0].langToken = elem.data('langToken');
 		}
-		
+
         return nodeObjArray;
     };
 
@@ -343,29 +343,23 @@
             textNode,
             defaultText,
             translation,
-            regex,
             langNotDefault = lang !== this.defaultLang;
 
         for (index = 0; index < nodes.length; index++) {
             textNode = nodes[index];
 
             if (langNotDefault) {
-		// If langToken is set, use it as a token
-		defaultText = textNode.langToken || $.trim(textNode.langDefaultText);
+				// If langToken is set, use it as a token
+				defaultText = textNode.langToken || jQuery.trim(textNode.langDefaultText);
 
                 if (defaultText) {
                     // Translate the langDefaultText
                     translation = this.translate(defaultText, lang);
-					
-					// if the text containing HTML tag, processing it
-					regex = /<[^>]+>/g;
-					
-					if(regex.test(translation)) {
-						elem.context.innerHTML = translation;
-					}else if (translation) {
+
+                    if (translation) {
                         try {
                             // Replace the text with the translated version
-                            textNode.node.data = textNode.node.data.split($.trim(textNode.node.data)).join(translation);
+                            textNode.node.data = textNode.node.data.split(jQuery.trim(textNode.node.data)).join(translation);
                         } catch (e) {
 
                         }
@@ -531,12 +525,12 @@
             this.currentLang = lang;
 
             // Get the page HTML
-            var arr = selector !== undefined ? $(selector).find('[lang]') : $(':not(html)[lang]'),
+            var arr = selector !== undefined ? jQuery(selector).find('[lang]') : jQuery(':not(html)[lang]'),
                 arrCount = arr.length,
                 elem;
 
             while (arrCount--) {
-                elem = $(arr[arrCount]);
+                elem = jQuery(arr[arrCount]);
 
                 if (elem.attr('lang') !== lang) {
                     this._translateElement(elem, lang);
@@ -656,13 +650,13 @@
 
     Lang.prototype.beforeUpdate = function (currentLang, newLang) {
         if (this._fireEvents) {
-            $(this).triggerHandler('beforeUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+            jQuery(this).triggerHandler('beforeUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
         }
     };
 
     Lang.prototype.afterUpdate = function (currentLang, newLang) {
         if (this._fireEvents) {
-            $(this).triggerHandler('afterUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+            jQuery(this).triggerHandler('afterUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
         }
     };
 
@@ -679,7 +673,7 @@
     Lang.prototype._mutation = function (context, method, args) {
         var result = this._mutationCopies[method].apply(context, args),
             currLang = this.currentLang,
-            rootElem = $(context);
+            rootElem = jQuery(context);
 
         if (rootElem.attr('lang')) {
             // Switch off events for the moment
