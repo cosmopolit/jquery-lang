@@ -1,4 +1,3 @@
-'use strict';
 /*
  The MIT License (MIT)
 
@@ -31,18 +30,18 @@
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'Cookies'], factory);
+        define(['jquery'], factory);
     } else if (typeof exports === 'object') {
         module.exports = factory();
     } else {
         var _OldLang = window.Lang;
-        var api = window.Lang = factory(jQuery, typeof Cookies !== 'undefined' ? Cookies : undefined);
+        var api = window.Lang = factory(jQuery);
         api.noConflict = function () {
             window.Lang = _OldLang;
             return api;
         };
     }
-}(function ($, Cookies) {
+}(function ($) {
     var Lang = function () {
         // Enable firing events
         this._fireEvents = true;
@@ -58,20 +57,17 @@
      */
     Lang.prototype.init = function (options) {
         var self = this,
-            cookieLang,
             defaultLang,
-            currentLang,
-            allowCookieOverride;
+            currentLang;
 
         options = options || {};
         options.cookie = options.cookie || {};
 
         defaultLang = options.defaultLang;
         currentLang = options.currentLang;
-        allowCookieOverride = options.allowCookieOverride;
 
         // Set cookie settings
-        this.cookieName = options.cookie.name || 'langCookie';
+        this.cookieName = options.cookie.name;
         this.cookieExpiry = options.cookie.expiry || 365;
         this.cookiePath = options.cookie.path || '/';
 
@@ -110,16 +106,6 @@
         // to start with
         this.defaultLang = defaultLang || 'en';
         this.currentLang = defaultLang || 'en';
-
-        // Check for cookie support when no current language is specified
-		if ((allowCookieOverride || !currentLang) && typeof Cookies !== 'undefined') {
-            // Check for an existing language cookie
-            cookieLang = Cookies.get(this.cookieName);
-
-            if (cookieLang) {
-                // We have a cookie language, set the current language
-                currentLang = cookieLang;
-            }
         }
 
         jQuery(function () {
@@ -540,15 +526,6 @@
 
             if (fireAfterUpdate) {
                 this.afterUpdate(currLang, lang);
-            }
-
-            // Check for cookie support
-			if (typeof Cookies !== "undefined") {
-                // Set a cookie to remember this language setting with 1 year expiry
-                Cookies.set(self.cookieName, lang, {
-                    expires: self.cookieExpiry,
-                    path: self.cookiePath
-                });
             }
 
             if (callback) {
