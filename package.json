@@ -2,7 +2,7 @@
   "author": "Rob Evans - Irrelon Software Limited",
   "name": "jquery-lang-js",
   "description": "i18n Automatically deploy and switch multi-language HTML pages without reloading the page.",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "keywords": [
     "jquery",
     "lang",
@@ -12,8 +12,9 @@
     "automatic",
     "translation"
   ],
-  "dependencies": {
-      "jquery": ">=1.7"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cosmopolit/jquery-lang-js.git"
   },
   "files": [
       "js/**/*.js"
