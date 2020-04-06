@@ -12,17 +12,12 @@
     "automatic",
     "translation"
   ],
-  "dependencies": {},
-  "engines": {
-    "node": "*"
+  "dependencies": {
+      "jquery": ">=1.7"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/irrelon/jquery-lang-js.git"
-  },
+  "files": [
+      "js/**/*.js"
+  ], 
   "main": "js/jquery-lang.js",
-  "bugs": {
-    "url": "http://github.com/irrelon/jquery-lang-js/issues"
-  },
   "license": "MIT"
 }
